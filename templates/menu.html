@@ -35,33 +35,7 @@
   html, body {
     background-color: var(--bg-app) !important;
     color: var(--text-strong) !important;
-    position: relative;
   }
-
-/* ---------- Marca de agua del logo en el fondo ---------- */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-image: url("/static/img/logo.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 50vw auto; /* ajusta el tamaño del logo aquí */
-  opacity: 0.10; /* ajusta la intensidad de la marca de agua: 0.04–0.10 suele verse bien */
-  pointer-events: none; /* para que no bloquee clics ni el buscador etc */
-  z-index: 0;
-}
-
-/* Aseguramos que todo el contenido real quede ENCIMA de la marca de agua */
-.navbar,
-.container-fluid {
-  position: relative;
-  z-index: 1;
-}
-
 .btn-outline-metodo-pago {
   border: 1px solid var(--border-soft);
   background: #ffffff;
@@ -87,65 +61,26 @@ body::before {
   .navbar-barpos .navbar-brand i {
     color: var(--gold);
   }
-
   .nav-link-menu {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #ffffff !important;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 8px;
-  padding: 8px 14px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  line-height: 1;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff !important;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 8px;
+    line-height: 1;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
   .nav-link-menu:hover,
-.nav-link-menu:focus {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-}
+  .nav-link-menu:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: var(--gold) !important;
+    color: var(--gold) !important;
+  }
   .navbar-toggler {
     border-color: rgba(255, 255, 255, 0.4) !important;
   }
-
-  .navbar-user-group {
-  flex-shrink: 0;
-}
-
-  .navbar-logo {
-  height: 38px;
-  width: 38px;
-  object-fit: contain;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 3px;
-}
-.navbar-logo-fallback {
-  font-size: 1.7rem;
-  color: var(--gold);
-  align-items: center;
-}
-.navbar-logo-sm {
-  height: 26px;
-  width: 26px;
-  object-fit: contain;
-}
-.navbar-brand-text {
-  color: #ffffff;
-}
-
-@media (max-width: 360px) {
-  .navbar-brand-text { display: none; }
-}
-
-.navbar-nav-group {
-  gap: 8px;
-}
   .offcanvas-navy {
     background: linear-gradient(180deg, var(--navy-900), var(--navy-700)) !important;
     color: #ffffff !important;
@@ -256,36 +191,15 @@ body::before {
   /* ---------- Filtro de categorías ---------- */
   .categorias-wrapper {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
   .categorias-scroll {
     display: flex;
     gap: 8px;
     overflow-x: auto;
     padding-bottom: 4px;
-    scroll-behavior: smooth;
-    flex: 1;
-    min-width: 0;
-    scrollbar-width: thin;
-    scrollbar-color: var(--gold) transparent;
+    scrollbar-width: none;
   }
-  .categorias-scroll::-webkit-scrollbar {
-    height: 6px;
-  }
-  .categorias-scroll::-webkit-scrollbar-thumb {
-    background-color: var(--gold);
-    border-radius: 10px;
-  }
-  .categorias-scroll::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .categorias-scroll.dragging {
-    cursor: grabbing;
-    scroll-behavior: auto;
-    user-select: none;
-  }
+  .categorias-scroll::-webkit-scrollbar { display: none; }
 
   .btn-categoria {
     flex: 0 0 auto;
@@ -307,32 +221,6 @@ body::before {
     background: var(--navy-900);
     border-color: var(--navy-900);
     color: var(--gold);
-  }
-
-  /* ---------- Flechas de navegación de categorías (solo PC) ---------- */
-  .btn-cat-arrow {
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--border-soft);
-    background: #ffffff;
-    color: var(--navy-900);
-    box-shadow: 0 2px 6px rgba(13, 27, 61, 0.08);
-    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
-  }
-  .btn-cat-arrow:hover {
-    background: var(--navy-900);
-    color: var(--gold);
-  }
-  .btn-cat-arrow:active {
-    transform: scale(0.92);
-  }
-  .btn-cat-arrow.oculto {
-    visibility: hidden;
-    pointer-events: none;
   }
 
   /* ---------- Tarjetas de producto (escritorio) ---------- */
@@ -399,89 +287,60 @@ body::before {
   }
 
   /* ---------- Panel de cuenta actual ---------- */
-.cuenta-actual-card {
-  background: #ffffff !important;
-  color: var(--text-strong) !important;
-  border-radius: 16px !important;
-  border: 1px solid var(--border-soft) !important;
-  box-shadow: 0 15px 35px rgba(13, 110, 253, 0.08) !important;
-  overflow: hidden;
-
-  /* NUEVO: limita la altura total de la card al espacio visible */
-   /* 20px arriba + 20px abajo, mismo valor que el "top" del sticky */
-  /* NUEVO: toda la card (header + body + footer) scrollea como un solo bloque */
-  max-height: calc(100vh - 40px); /* mismo valor que el "top: 20px" del sticky */
-  overflow-y: auto;
-  overflow-x: hidden;
-  }
-
-.cuenta-actual-header {
-  background: linear-gradient(135deg, var(--navy-900), var(--navy-700)) !important;
-  color: var(--gold) !important;
-}
-
-.cuenta-actual-body-scroll {
-  /* NUEVO: reemplaza el max-height inline del card-body */
-  flex: 1 1 auto;
-  min-height: 80px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.cuenta-actual-footer {
-  background: var(--input-bg) !important;
-  border-top: 1px solid var(--border-soft);
-}
-
-#cliente {
-  background: var(--input-bg) !important;
-  color: var(--text-strong) !important;
-  border: 1px solid var(--border-soft) !important;
-  border-radius: 10px !important;
-}
-#cliente:focus {
-  background: #ffffff !important;
-  border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
-}
-#total-pagar {
-  color: var(--navy-900) !important;
-}
-.total-label {
-  color: var(--text-muted);
-}
-
-/* ---------- Tabla del carrito (#detalle-venta) ---------- */
-.table-cuenta thead th {
-  background-color: var(--navy-900) !important;
-  color: #ffffff !important;
-  border-bottom: 2px solid var(--navy-700);
-
-  /* NUEVO: encabezado de la tabla siempre visible al hacer scroll interno */
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-.table-cuenta tbody tr:nth-child(odd) td,
-.table-cuenta tbody tr:nth-child(odd) td * {
-  background-color: #ffffff !important;
-  color: var(--text-strong) !important;
-}
-.table-cuenta tbody tr:nth-child(even) td,
-.table-cuenta tbody tr:nth-child(even) td * {
-  background-color: var(--input-bg) !important;
-  color: var(--text-strong) !important;
-}
-.table-cuenta .text-warning {
-  color: #b45309 !important;
-}
-
-/* En celular no tiene sentido el sticky, deja que fluya con la página */
-@media (max-width: 767.98px) {
   .cuenta-actual-card {
-    max-height: none;
+    background: #ffffff !important;
+    color: var(--text-strong) !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--border-soft) !important;
+    box-shadow: 0 15px 35px rgba(13, 110, 253, 0.08) !important;
+    overflow: hidden;
   }
-}
+  .cuenta-actual-header {
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-700)) !important;
+    color: var(--gold) !important;
+  }
+  .cuenta-actual-footer {
+    background: var(--input-bg) !important;
+    border-top: 1px solid var(--border-soft);
+  }
+  #cliente {
+    background: var(--input-bg) !important;
+    color: var(--text-strong) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: 10px !important;
+  }
+  #cliente:focus {
+    background: #ffffff !important;
+    border-color: var(--blue-500) !important;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+  }
+  #total-pagar {
+    color: var(--navy-900) !important;
+  }
+  .total-label {
+    color: var(--text-muted);
+  }
+
+  /* ---------- Tabla del carrito (#detalle-venta) ---------- */
+  .table-cuenta thead th {
+    background-color: var(--navy-900) !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid var(--navy-700);
+  }
+  .table-cuenta tbody tr:nth-child(odd) td,
+  .table-cuenta tbody tr:nth-child(odd) td * {
+    background-color: #ffffff !important;
+    color: var(--text-strong) !important;
+  }
+  .table-cuenta tbody tr:nth-child(even) td,
+  .table-cuenta tbody tr:nth-child(even) td * {
+    background-color: var(--input-bg) !important;
+    color: var(--text-strong) !important;
+  }
+  .table-cuenta .text-warning {
+    color: #b45309 !important;
+  }
+
   /* ---------- Estilos de Tabla (#tablaGastos) ---------- */
   #tablaGastos thead th {
     background-color: var(--navy-900) !important;
@@ -666,81 +525,70 @@ body::before {
 </style>
   </head>
   <body>
-   <nav class="navbar navbar-expand-lg navbar-barpos shadow mb-4">
-  <div class="container-fluid px-3 px-md-4">
+    <nav class="navbar navbar-expand-lg navbar-barpos shadow mb-4">
+      <div class="container-fluid px-2 px-md-4 justify-content-start justify-content-lg-between">
 
-    <button
-      class="navbar-toggler me-2"
-      type="button"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#navbarOffcanvas"
-      aria-controls="navbarOffcanvas"
-      aria-label="Abrir menú"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        <button
+          class="navbar-toggler me-2"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#navbarOffcanvas"
+          aria-controls="navbarOffcanvas"
+          aria-label="Abrir menú"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <a class="navbar-brand d-flex align-items-center gap-2 fw-bold fs-4 me-auto me-lg-4" href="/dashboard">
-      <img
-        src="/static/img/{{ logo if logo else 'logo.png' }}"
-        alt="Logo"
-        class="navbar-logo"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
-      />
-     <i class="fa-solid fa-burger"></i> 
-      <span class="navbar-brand-text">Burst of Flavor</span>
-    </a>
+        <a class="navbar-brand fw-bold fs-3 me-auto me-lg-0" href="/dashboard">
+         <i class="fa-solid fa-burger"></i>  Burst of Flavor
+        </a>
 
-    <div class="offcanvas offcanvas-start offcanvas-navy" tabindex="-1" id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
-      <div class="offcanvas-header border-bottom border-light border-opacity-25 d-lg-none">
-        <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2" id="navbarOffcanvasLabel">
-          <img
-            src="/static/img/{{ logo if logo else 'logo.png' }}"
-            alt="Logo"
-            class="navbar-logo-sm"
-            onerror="this.style.display='none'"
-          />
-          Burst of Flavor
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-
-      <div class="offcanvas-body d-lg-flex align-items-lg-center w-100 justify-content-lg-between p-3 p-lg-0">
-
-        <div class="navbar-nav-group d-flex flex-wrap flex-lg-row">
-          {% if rol == 'Administrador' %}
-          <a class="nav-link nav-link-menu" href="/usuarios">
-            <i class="fa-solid fa-users-gear"></i> Personal
-          </a>
-          {% endif %}
-
-          <a class="nav-link nav-link-menu" href="/productos">
-            <i class="fa-solid fa-boxes-stacked"></i> Productos
-          </a>
-
-          <a class="nav-link nav-link-menu" href="/gastos">
-            <i class="fa-solid fa-money-bill-wave"></i> Gastos
-          </a>
-
-          <a class="nav-link nav-link-menu" href="/ventas">
-            <i class="fa-solid fa-chart-line"></i> Ventas
-          </a>
-        </div>
-
-        <div class="navbar-user-group d-flex align-items-center justify-content-between justify-content-lg-end mt-4 mt-lg-0 pt-3 pt-lg-0 border-top border-light border-opacity-25 border-lg-0">
-          <div class="text-start text-lg-end me-3">
-            <span class="badge bg-warning text-dark fw-bold">{{ rol }}</span>
-            <span class="d-block small text-white-50">{{ usuario }}</span>
+        <div class="offcanvas offcanvas-start offcanvas-navy" tabindex="-1" id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
+          <div class="offcanvas-header border-bottom border-light border-opacity-25 d-lg-none">
+            <h5 class="offcanvas-title fw-bold" id="navbarOffcanvasLabel">
+             <i class="fa-solid fa-burger"></i>  Burst of Flavor
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <a href="/auth/logout" class="btn btn-danger btn-sm">
-            <i class="fa-solid fa-right-from-bracket"></i> Salir
-          </a>
-        </div>
 
+          <div class="offcanvas-body d-lg-flex align-items-center w-100 justify-content-between p-3 p-lg-0">
+            <div class="navbar-nav mx-auto mt-2 mt-lg-0 d-flex flex-wrap flex-lg-row">
+              {% if rol == 'Administrador' %}
+              <a class="nav-link nav-link-menu mx-1 my-1 px-3 fw-bold align-self-start align-self-lg-center"
+                 href="/usuarios">
+                  <i class="fa-solid fa-users-gear"></i> Personal (CRUD)
+              </a>
+              {% endif %}
+
+              <a class="nav-link nav-link-menu mx-1 my-1 px-3 fw-bold align-self-start align-self-lg-center"
+                 href="/productos">
+                  <i class="fa-solid fa-boxes-stacked"></i> Gestión de Productos
+              </a>
+
+              <a class="nav-link nav-link-menu mx-1 my-1 px-3 fw-bold align-self-start align-self-lg-center"
+                 href="/gastos">
+                  <i class="fa-solid fa-money-bill-wave"></i> Gestión de Gastos
+              </a>
+            </div>
+             <a class="nav-link nav-link-menu mx-1 my-1 px-3 fw-bold align-self-start align-self-lg-center"
+                 href="/ventas">
+                  <i class="fa-solid fa-money-bill-wave"></i> Gestión de Ventas
+              </a>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between justify-content-lg-end mt-4 mt-lg-0 border-top border-light border-opacity-25 pt-3 pt-lg-0 border-lg-0">
+              <div class="text-start text-lg-end me-3">
+                <span class="badge bg-warning text-dark fw-bold">{{ rol }}</span>
+                <span class="d-block small text-white-50">{{ usuario }}</span>
+              </div>
+              <a href="/auth/logout" class="btn btn-danger btn-sm">
+                <i class="fa-solid fa-right-from-bracket"></i> Salir
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</nav>
+    </nav>
 
     <div class="container-fluid px-3 px-md-4">
       <div class="row">
@@ -749,7 +597,7 @@ body::before {
           <!-- ============ TÍTULO + BOTÓN ESTADO DE CUENTA + BUSCADOR ============ -->
           <div class="menu-header-row">
             <h3 class="section-title mb-0">
-              <i class="fa-solid fa-burger text-warning"></i> Menú de Comida
+             <i class="fa-solid fa-burger"></i>  Menú de Comida
             </h3>
 
             <div class="d-flex align-items-center gap-2">
@@ -836,11 +684,7 @@ body::before {
           {% endfor %}
 
           <div class="categorias-wrapper mb-3">
-            <button type="button" class="btn-cat-arrow btn-cat-arrow-left d-none d-md-flex" id="catArrowLeft" title="Ver anteriores">
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-
-            <div class="categorias-scroll" id="categoriasScroll">
+            <div class="categorias-scroll">
               <button type="button" class="btn-categoria active" data-categoria="todas">
                 <i class="fa-solid fa-border-all me-1"></i> Todas
               </button>
@@ -850,10 +694,6 @@ body::before {
               </button>
               {% endfor %}
             </div>
-
-            <button type="button" class="btn-cat-arrow btn-cat-arrow-right d-none d-md-flex" id="catArrowRight" title="Ver siguientes">
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
           </div>
 
           <!-- ============ VERSIÓN CELULAR: carrusel circular horizontal ============ -->
@@ -965,70 +805,87 @@ body::before {
             {% endfor %}
           </div>
         </div>
-<div class="col-lg-4 col-md-5">
-  <div class="card cuenta-actual-card position-sticky" style="top: 20px">
-    <div class="card-header cuenta-actual-header fw-bold d-flex justify-content-between align-items-center py-3 border-0">
-      <span><i class="fa-solid fa-cash-register me-1"></i> CUENTA ACTUAL</span>
-      <button class="btn btn-sm btn-outline-light btn-limpiar" onclick="vaciarCarrito()">
-        Limpiar
-      </button>
-    </div>
 
-    <!-- CAMBIO: sin style inline, sin scroll propio -->
-    <div class="card-body p-0">
-      <table class="table table-cuenta mb-0 align-middle text-center">
-        <thead>
-          <tr>
-            <th class="text-start" style="width: 40%">Item</th>
-            <th style="width: 30%">Cantidad</th>
-            <th style="width: 20%">Total</th>
-            <th style="width: 10%"></th>
-          </tr>
-        </thead>
-        <tbody id="detalle-venta">
-          <tr id="carrito-vacio">
-            <td colspan="4" class="py-4 text-muted">No hay consumos.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <div class="col-lg-4 col-md-5">
+          <div
+            class="card cuenta-actual-card position-sticky"
+            style="top: 20px"
+          >
+            <div class="card-header cuenta-actual-header fw-bold d-flex justify-content-between align-items-center py-3 border-0">
+              <span><i class="fa-solid fa-cash-register me-1"></i> CUENTA ACTUAL</span>
+              <button class="btn btn-sm btn-outline-light btn-limpiar" onclick="vaciarCarrito()">
+                Limpiar
+              </button>
+            </div>
 
-    <div class="card-footer cuenta-actual-footer p-3">
-      <div class="mb-3">
-        <label class="form-label small mb-1 total-label">Método de pago</label>
-        <div class="btn-group w-100" role="group" id="metodoPagoGroup">
-          <input type="radio" class="btn-check" name="metodoPago" id="pagoEfectivo" value="Efectivo" checked>
-          <label class="btn btn-outline-metodo-pago" for="pagoEfectivo">
-            <i class="fa-solid fa-money-bill-wave me-1"></i> Efectivo
-          </label>
+            <div class="card-body p-0" style="max-height: 350px; overflow-y: auto">
+              <table class="table table-cuenta mb-0 align-middle text-center">
+                <thead>
+                  <tr>
+                    <th class="text-start" style="width: 40%">Item</th>
+                    <th style="width: 30%">Cantidad</th>
+                    <th style="width: 20%">Total</th>
+                    <th style="width: 10%"></th>
+                  </tr>
+                </thead>
+                <tbody id="detalle-venta">
+                  <tr id="carrito-vacio">
+                    <td colspan="4" class="py-4 text-muted">No hay consumos.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-          <input type="radio" class="btn-check" name="metodoPago" id="pagoTransferencia" value="Transferencia">
-          <label class="btn btn-outline-metodo-pago" for="pagoTransferencia">
-            <i class="fa-solid fa-mobile-screen-button me-1"></i> Transferencia
-          </label>
-        </div>
-      </div>
+            <div class="card-footer cuenta-actual-footer p-3">
+  <div class="mb-3">
+    <label class="form-label small mb-1 total-label">Método de pago</label>
+    <div class="btn-group w-100" role="group" id="metodoPagoGroup">
+      <input type="radio" class="btn-check" name="metodoPago" id="pagoEfectivo" value="Efectivo" checked>
+      <label class="btn btn-outline-metodo-pago" for="pagoEfectivo">
+        <i class="fa-solid fa-money-bill-wave me-1"></i> Efectivo
+      </label>
 
-      <div class="mb-3">
-        <label class="form-label small mb-1 total-label">Cliente</label>
-        <input
-          type="text"
-          id="cliente"
-          class="form-control form-control-sm"
-          value="CONSUMIDOR FINAL"
-        />
-      </div>
-
-      <div class="d-flex justify-content-between fs-5 fw-bold border-top pt-2 mb-3" style="border-color: var(--border-soft) !important;">
-        <span class="total-label">TOTAL:</span>
-        <span id="total-pagar">$0.00</span>
-      </div>
-      <button class="btn btn-cobrar w-100 btn-lg" onclick="procesarCobro()">
-        REGISTRAR COBRO
-      </button>
+      <input type="radio" class="btn-check" name="metodoPago" id="pagoTransferencia" value="Transferencia">
+      <label class="btn btn-outline-metodo-pago" for="pagoTransferencia">
+        <i class="fa-solid fa-mobile-screen-button me-1"></i> Transferencia
+      </label>
     </div>
   </div>
-</div>
+
+  <div class="mb-3">
+    <label class="form-label small mb-1 total-label">Cliente</label>
+    <input
+      type="text"
+      id="cliente"
+      class="form-control form-control-sm"
+      value="CONSUMIDOR FINAL"
+    />
+  </div>
+  
+
+
+            <div class="card-footer cuenta-actual-footer p-3">
+              <div class="mb-3">
+                <label class="form-label small mb-1 total-label">Cliente</label>
+                <input
+                  type="text"
+                  id="cliente"
+                  class="form-control form-control-sm"
+                  value="CONSUMIDOR FINAL"
+                />
+              </div>
+              <div class="d-flex justify-content-between fs-5 fw-bold border-top pt-2 mb-3" style="border-color: var(--border-soft) !important;">
+                <span class="total-label">TOTAL:</span>
+                <span id="total-pagar">$0.00</span>
+              </div>
+              <button class="btn btn-cobrar w-100 btn-lg" onclick="procesarCobro()">
+                REGISTRAR COBRO
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -1239,76 +1096,6 @@ body::before {
         : '¡Meta superada! Ganancia: ' + formatearMoneda(Math.abs(restante));
   }
 
-  // ---------- Navegación de categorías (flechas, rueda del mouse y arrastre) ----------
-  function initNavegacionCategorias() {
-    const scrollBox = document.getElementById('categoriasScroll');
-    const btnLeft = document.getElementById('catArrowLeft');
-    const btnRight = document.getElementById('catArrowRight');
-    if (!scrollBox) return;
-
-    const SCROLL_STEP = 220;
-
-    function actualizarVisibilidadFlechas() {
-      if (!btnLeft || !btnRight) return;
-      const maxScroll = scrollBox.scrollWidth - scrollBox.clientWidth;
-
-      if (maxScroll <= 2) {
-        btnLeft.classList.add('oculto');
-        btnRight.classList.add('oculto');
-        return;
-      }
-
-      btnLeft.classList.toggle('oculto', scrollBox.scrollLeft <= 2);
-      btnRight.classList.toggle('oculto', scrollBox.scrollLeft >= maxScroll - 2);
-    }
-
-    // Flechas
-    btnLeft?.addEventListener('click', () => {
-      scrollBox.scrollBy({ left: -SCROLL_STEP, behavior: 'smooth' });
-    });
-    btnRight?.addEventListener('click', () => {
-      scrollBox.scrollBy({ left: SCROLL_STEP, behavior: 'smooth' });
-    });
-
-    scrollBox.addEventListener('scroll', debounce(actualizarVisibilidadFlechas, 50));
-    window.addEventListener('resize', debounce(actualizarVisibilidadFlechas, 100));
-
-    // Rueda del mouse (vertical -> horizontal)
-    scrollBox.addEventListener('wheel', (e) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      scrollBox.scrollLeft += e.deltaY;
-    }, { passive: false });
-
-    // Arrastrar con click (drag to scroll) en PC
-    let isDown = false;
-    let startX, scrollLeftInicial;
-
-    scrollBox.addEventListener('mousedown', (e) => {
-      isDown = true;
-      scrollBox.classList.add('dragging');
-      startX = e.pageX - scrollBox.offsetLeft;
-      scrollLeftInicial = scrollBox.scrollLeft;
-    });
-
-    ['mouseleave', 'mouseup'].forEach(evt => {
-      scrollBox.addEventListener(evt, () => {
-        isDown = false;
-        scrollBox.classList.remove('dragging');
-      });
-    });
-
-    scrollBox.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - scrollBox.offsetLeft;
-      const walk = (x - startX) * 1.2;
-      scrollBox.scrollLeft = scrollLeftInicial - walk;
-    });
-
-    actualizarVisibilidadFlechas();
-  }
-
   document.addEventListener("DOMContentLoaded", function () {
     initStockData();
 
@@ -1324,9 +1111,6 @@ body::before {
         aplicarFiltros();
       });
     });
-
-    // ---------- Navegación de categorías (nuevo) ----------
-    initNavegacionCategorias();
 
     // ---------- Modal Estado de Cuenta: animar gauge al abrir ----------
     const modalEstadoCuenta = document.getElementById('modalEstadoCuenta');
