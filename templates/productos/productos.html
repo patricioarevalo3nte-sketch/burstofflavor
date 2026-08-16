@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BarPOS - Gestión de Productos</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --navy-900: #0b1b3d;
+        --navy-700: #0d2c6e;
+        --blue-500: #0d6efd;
+        --bg-app: #f4f7fe;
+        --border-soft: #e2e8f0;
+        --input-bg: #f8fafc;
+        --text-strong: #0b1b3d;
+        --text-muted: #4a5568;
+        --text-soft: #94a3b8;
+        --gold: #ffc107;
+      }
+
+      body {
+        background-color: var(--bg-app) !important;
+        font-family: "Segoe UI", sans-serif;
+        color: var(--text-strong);
+      }
+
+      .navbar-custom {
+        background: linear-gradient(
+          135deg,
+          var(--navy-900),
+          var(--navy-700)
+        ) !important;
+        border-bottom: none;
+        box-shadow: 0 8px 20px rgba(13, 44, 110, 0.15);
+      }
+      .navbar-custom .navbar-brand {
+        color: #ffffff !important;
+      }
+      .navbar-custom .navbar-brand i {
+        color: var(--gold);
+      }
+
+      .btn-regresar {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+      }
+      .btn-regresar:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: var(--gold) !important;
+        border-color: var(--gold) !important;
+      }
+
+      .btn-nuevo-producto {
+        background: var(--gold) !important;
+        color: var(--navy-900) !important;
+        border: none !important;
+        border-radius: 10px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+      }
+      .btn-nuevo-producto:hover {
+        background: #ffcd39 !important;
+        color: var(--navy-900) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(255, 193, 7, 0.3);
+      }
+
+      .card-custom {
+        background-color: #ffffff !important;
+        border: 1px solid var(--border-soft) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 15px 35px rgba(13, 110, 253, 0.08);
+      }
+
+      .titulo-seccion {
+        color: var(--navy-900) !important;
+      }
+      .subtitulo-seccion {
+        color: var(--text-muted) !important;
+      }
+
+      #buscarProducto {
+        background: var(--input-bg) !important;
+        border: 1px solid var(--border-soft) !important;
+        color: var(--text-strong) !important;
+        border-radius: 10px !important;
+      }
+      #buscarProducto:focus {
+        background: #ffffff !important;
+        border-color: var(--blue-500) !important;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+      }
+
+      /* ---------- Filtro de categorías ---------- */
+      .categorias-wrapper {
+        margin-bottom: 1rem;
+      }
+      .categorias-scroll {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .categorias-scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      .btn-categoria {
+        flex: 0 0 auto;
+        background: #ffffff;
+        color: var(--navy-900);
+        border: 1px solid var(--border-soft);
+        border-radius: 999px;
+        padding: 6px 16px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .btn-categoria:hover {
+        border-color: var(--blue-500);
+        color: var(--blue-500);
+      }
+      .btn-categoria.active {
+        background: var(--navy-900);
+        border-color: var(--navy-900);
+        color: var(--gold);
+      }
+
+      /* ---------- Tabla ---------- */
+      .table-custom {
+        background-color: transparent !important;
+        color: var(--text-strong) !important;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+      }
+      .table-custom thead th {
+        background-color: var(--navy-900) !important;
+        color: var(--gold) !important;
+        border: none !important;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        padding: 14px;
+      }
+      .table-custom thead th.th-sortable {
+        cursor: pointer;
+        user-select: none;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+      .table-custom thead th.th-sortable:hover {
+        background-color: var(--navy-700) !important;
+        color: #ffffff !important;
+      }
+      .sort-icon {
+        font-size: 0.75rem;
+        margin-left: 4px;
+        opacity: 0.6;
+      }
+      .table-custom thead th.th-sortable.sort-asc .sort-icon,
+      .table-custom thead th.th-sortable.sort-desc .sort-icon {
+        opacity: 1;
+        color: var(--gold);
+      }
+      .table-custom tbody tr {
+        background-color: #ffffff !important;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 2px 8px rgba(13, 27, 61, 0.06);
+      }
+      .table-custom tbody tr:hover {
+        background-color: var(--input-bg) !important;
+        transform: scale(1.005);
+      }
+      .table-custom tbody td {
+        padding: 16px !important;
+        border: none !important;
+        vertical-align: middle;
+        color: var(--text-strong) !important;
+      }
+      .table-custom tbody tr td:first-child {
+        border-top-left-radius: 12px !important;
+        border-bottom-left-radius: 12px !important;
+      }
+      .table-custom tbody tr td:last-child {
+        border-top-right-radius: 12px !important;
+        border-bottom-right-radius: 12px !important;
+      }
+
+      /* ESTILOS INTERNOS PARA EL MODAL */
+      .modal-content-custom {
+        background-color: #ffffff !important;
+        border: 2px solid var(--blue-500) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 30px rgba(13, 27, 61, 0.2) !important;
+        color: var(--text-strong) !important;
+      }
+      .modal-content-custom label {
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .form-control-custom {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--border-soft) !important;
+        color: var(--text-strong) !important;
+        border-radius: 10px !important;
+        padding: 10px 12px;
+        width: 100%;
+      }
+      .form-control-custom:focus {
+        background-color: #ffffff !important;
+        border-color: var(--blue-500) !important;
+        color: var(--text-strong);
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12) !important;
+      }
+      .form-control-custom:disabled {
+        background-color: #eef1f8 !important;
+        border-color: var(--border-soft) !important;
+        color: var(--text-soft) !important;
+        opacity: 1 !important;
+      }
+      .badge-stock {
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: bold !important;
+      }
+      .product-img-preview {
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid var(--gold);
+      }
+
+      .btn-guardar-producto {
+        background: var(--navy-900) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 10px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+      }
+      .btn-guardar-producto:hover {
+        background: var(--blue-500) !important;
+        color: #ffffff !important;
+        box-shadow: 0 8px 18px rgba(13, 110, 253, 0.25);
+      }
+
+      /* ---------- Spinner del modal de carga ---------- */
+      .spinner-carga {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto;
+        border-radius: 50%;
+        border: 5px solid var(--border-soft);
+        border-top-color: var(--blue-500);
+        animation: girar 0.8s linear infinite;
+      }
+      @keyframes girar {
+        to { transform: rotate(360deg); }
+      }
+
+      /* Aviso visual de "solo lectura" cuando el modal está en modo Ver */
+      #modalProducto.modo-ver #previewImagen,
+      #modalProducto.modo-ver .form-control-custom {
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark navbar-custom">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center gap-3">
+          <a href="/dashboard" class="btn btn-regresar btn-sm fw-bold">
+            <i class="fa-solid fa-arrow-left"></i>
+            Regresar
+          </a>
+          <a class="navbar-brand fw-bold mb-0">
+            <i class="fa-solid fa-beer-mug-empty"></i>
+            BarPOS
+          </a>
+        </div>
+
+        <div>
+          <button
+            class="btn btn-nuevo-producto fw-bold"
+            data-bs-toggle="modal"
+            data-bs-target="#modalProducto"
+            data-modo="crear"
+          >
+            <i class="fa fa-plus"></i>
+            Nuevo Producto
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <div class="card card-custom">
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-8">
+              <h2 class="titulo-seccion fw-bold">
+                <i class="fa fa-boxes"></i>
+                Inventario de Productos
+              </h2>
+
+              <p class="subtitulo-seccion">
+                Administra todos los productos registrados.
+              </p>
+            </div>
+
+            <div class="col-md-4">
+              <input
+                type="text"
+                id="buscarProducto"
+                class="form-control"
+                placeholder="Buscar producto..."
+              />
+            </div>
+          </div>
+
+          <!-- ============ FILTRO DE CATEGORÍAS ============ -->
+          {% set categorias_lista = [] %} {% for p in productos %} {% set cat =
+          p.categoria|default('General', true) %} {% if cat not in
+          categorias_lista %} {% set _ = categorias_lista.append(cat) %} {%
+          endif %} {% endfor %}
+
+          <div class="categorias-wrapper">
+            <div class="categorias-scroll">
+              <button
+                type="button"
+                class="btn-categoria active"
+                data-categoria="todas"
+              >
+                <i class="fa-solid fa-border-all me-1"></i> Todas
+              </button>
+              {% for cat in categorias_lista %}
+              <button
+                type="button"
+                class="btn-categoria"
+                data-categoria="{{ cat }}"
+              >
+                {{ cat }}
+              </button>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table
+              class="table table-custom table-hover align-middle text-center"
+            >
+              <thead>
+                <tr>
+                  <th class="th-sortable" data-col="0" data-tipo="numero">
+                    ID <i class="fa-solid fa-sort sort-icon"></i>
+                  </th>
+
+                  <th>Imagen</th>
+
+                  <th class="th-sortable" data-col="2" data-tipo="texto">
+                    Producto <i class="fa-solid fa-sort sort-icon"></i>
+                  </th>
+
+                  <th class="th-sortable" data-col="3" data-tipo="numero">
+                    Stock <i class="fa-solid fa-sort sort-icon"></i>
+                  </th>
+
+                  <th class="th-sortable" data-col="4" data-tipo="numero">
+                    Precio <i class="fa-solid fa-sort sort-icon"></i>
+                  </th>
+
+                  <th class="th-sortable" data-col="5" data-tipo="numero">
+                    Precio Compra <i class="fa-solid fa-sort sort-icon"></i>
+                  </th>
+
+                  <th class="th-sortable" data-col="6" data-tipo="texto">
+                    Descripción <i class="fa-solid fa-sort sort-icon"></i>
+                  </th>
+
+                  <th class="th-sortable" data-col="7" data-tipo="texto">
+                    Categoría <i class="fa-solid fa-sort sort-icon"></i>
+                  </th>
+
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody id="tablaProductos">
+                {% for p in productos %}
+                <tr
+                  data-fila-busqueda="{{ p.nombre|lower }}"
+                  data-categoria="{{ p.categoria|default('General', true) }}"
+                >
+                  <td>{{ p.id }}</td>
+                  <!-- Imagen -->
+                  <td>
+                    <img
+                      src="/static/img/{{ p.imagen if p.imagen else 'placeholder.png' }}"
+                      class="product-img-preview"
+                      alt="{{ p.nombre }}"
+                    />
+                  </td>
+
+                  <td class="fw-bold">{{ p.nombre }}</td>
+
+                  <td>
+                    {% if p.stock <= 5 %}
+                    <span class="badge badge-stock bg-danger"
+                      >{{ p.stock }}</span
+                    >
+                    {% else %}
+                    <span class="badge badge-stock bg-success"
+                      >{{ p.stock }}</span
+                    >
+                    {% endif %}
+                  </td>
+
+                  <td>$ {{ "%.2f"|format(p.precio) }}</td>
+
+                  <td>$ {{ "%.2f"|format(p.precio_compra) }}</td>
+
+                  <!-- Descripción -->
+                  <td>{{ p.descripcion }}</td>
+
+                  <!-- Categoría -->
+                  <td>
+                    <span class="badge bg-secondary">
+                      {{ p.categoria if p.categoria else 'General' }}
+                    </span>
+                  </td>
+
+                  <!-- Acciones -->
+                  <td class="text-nowrap">
+                    <button
+                      class="btn btn-outline-secondary btn-sm btnVer"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalProducto"
+                      data-modo="ver"
+                      data-id="{{ p.id }}"
+                      data-nombre="{{ p.nombre }}"
+                      data-categoria="{{ p.categoria }}"
+                      data-descripcion="{{ p.descripcion }}"
+                      data-precio="{{ p.precio }}"
+                      data-precio_compra="{{ p.precio_compra }}"
+                      data-stock="{{ p.stock }}"
+                      data-imagen="{{ p.imagen }}"
+                      title="Ver detalle"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </button>
+
+                    <button
+                      class="btn btn-info btn-sm btnEditar"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalProducto"
+                      data-modo="editar"
+                      data-id="{{ p.id }}"
+                      data-nombre="{{ p.nombre }}"
+                      data-categoria="{{ p.categoria }}"
+                      data-descripcion="{{ p.descripcion }}"
+                      data-precio="{{ p.precio }}"
+                      data-precio_compra="{{ p.precio_compra }}"
+                      data-stock="{{ p.stock }}"
+                      data-imagen="{{ p.imagen }}"
+                    >
+                      <i class="fa fa-edit"></i> Editar
+                    </button>
+
+                    <button
+                      class="btn btn-danger btn-sm btnEliminar"
+                      data-id="{{ p.id }}"
+                      data-nombre="{{ p.nombre }}"
+                    >
+                      <i class="fa fa-trash"></i> Eliminar
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== MODAL PRODUCTO (crear / editar / ver) ====================== -->
+    <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content modal-content-custom">
+          <form id="formProducto" method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="producto_id" name="id" />
+            <input type="hidden" id="imagen_actual" name="imagen_actual" />
+
+            <div class="modal-header border-0">
+              <h4 class="modal-title fw-bold titulo-seccion" id="tituloModal">
+                <i class="fa fa-box"></i>
+                Nuevo Producto
+              </h4>
+
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4 text-center">
+                  <img
+                    id="previewImagen"
+                    src="/static/img/placeholder.png"
+                    style="
+                      width: 180px;
+                      height: 180px;
+                      object-fit: cover;
+                      border-radius: 20px;
+                      border: 3px solid #ffc107;
+                    "
+                  />
+
+                  <div class="mt-3">
+                    <input
+                      type="file"
+                      name="imagen_file"
+                      id="imagen"
+                      class="form-control"
+                      accept="image/*"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-8">
+                  <div class="mb-3">
+                    <label>Nombre</label>
+                    <input
+                      class="form-control form-control-custom"
+                      id="nombre"
+                      name="nombre"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Categoría</label>
+                    <input
+                      class="form-control form-control-custom"
+                      id="categoria"
+                      name="categoria"
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label>Descripción</label>
+                    <input
+                      class="form-control form-control-custom"
+                      id="descripcion"
+                      name="descripcion"
+                    />
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label>Precio</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        class="form-control form-control-custom"
+                        id="precio"
+                        name="precio"
+                        required
+                      />
+                    </div>
+                     <div class="col-md-6">
+                      <label>Precio Compra</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        class="form-control form-control-custom"
+                        id="precio_compra"
+                        name="precio_compra"
+                        required
+                      />
+                    </div>
+
+                    <div class="col-md-6">
+                      <label>Stock</label>
+                      <input
+                        type="number"
+                        class="form-control form-control-custom"
+                        id="stock"
+                        name="stock"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer border-0">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+
+              <button
+                type="submit"
+                id="btnGuardar"
+                class="btn btn-guardar-producto fw-bold"
+              >
+                <i class="fa fa-save"></i>
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== MODAL DE CARGA (Guardar / Eliminar) ====================== -->
+    <div
+      class="modal fade"
+      id="modalCargando"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-custom text-center py-4">
+          <div class="modal-body">
+            <div class="spinner-carga mb-3"></div>
+            <h5 class="fw-bold titulo-seccion mb-1" id="mensajeCargando">
+              Guardando producto...
+            </h5>
+            <p class="subtitulo-seccion mb-0 small">
+              Esto puede tardar unos segundos, no cierres esta ventana.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const modalProductoEl = document.getElementById("modalProducto");
+      const modalProducto = new bootstrap.Modal(modalProductoEl);
+      const form = document.getElementById("formProducto");
+      const tituloModal = document.getElementById("tituloModal");
+      const btnGuardar = document.getElementById("btnGuardar");
+      const inputFile = document.getElementById("imagen");
+      const previewImagen = document.getElementById("previewImagen");
+
+      const modalCargandoEl = document.getElementById("modalCargando");
+      const modalCargando = new bootstrap.Modal(modalCargandoEl);
+      const mensajeCargando = document.getElementById("mensajeCargando");
+
+      function mostrarCargando(texto) {
+        mensajeCargando.textContent = texto;
+        modalCargando.show();
+      }
+
+      function ocultarCargando() {
+        modalCargando.hide();
+      }
+
+      function alternarSoloLectura(soloLectura) {
+        form.querySelectorAll("input:not([type=hidden])").forEach((campo) => {
+          campo.disabled = soloLectura;
+        });
+        btnGuardar.classList.toggle("d-none", soloLectura);
+      }
+
+      // Se dispara justo antes de que Bootstrap abra el modal (crear / editar / ver)
+      modalProductoEl.addEventListener("show.bs.modal", function (evento) {
+        const boton = evento.relatedTarget;
+        const modo = boton?.dataset?.modo || "crear";
+        modalProductoEl.classList.toggle("modo-ver", modo === "ver");
+
+        if (modo === "crear") {
+          form.reset();
+          document.getElementById("producto_id").value = "";
+          document.getElementById("imagen_actual").value = "";
+          previewImagen.src = "/static/img/placeholder.png";
+          tituloModal.innerHTML = '<i class="fa fa-box"></i> Nuevo Producto';
+          alternarSoloLectura(false);
+          return;
+        }
+
+        // editar o ver: precargamos los datos del producto seleccionado
+        document.getElementById("producto_id").value = boton.dataset.id;
+        document.getElementById("nombre").value = boton.dataset.nombre;
+        document.getElementById("categoria").value =
+          boton.dataset.categoria || "";
+        document.getElementById("descripcion").value =
+          boton.dataset.descripcion;
+        document.getElementById("precio").value = boton.dataset.precio;
+        document.getElementById("precio_compra").value = boton.dataset.precio_compra;
+        document.getElementById("stock").value = boton.dataset.stock;
+        document.getElementById("imagen_actual").value =
+          boton.dataset.imagen || "";
+
+        previewImagen.src = boton.dataset.imagen
+          ? `/static/img/${boton.dataset.imagen}`
+          : "/static/img/placeholder.png";
+
+        if (modo === "editar") {
+          tituloModal.innerHTML = '<i class="fa fa-edit"></i> Editar Producto';
+          alternarSoloLectura(false);
+        } else {
+          tituloModal.innerHTML =
+            '<i class="fa fa-eye"></i> Detalle del Producto';
+          alternarSoloLectura(true);
+        }
+      });
+
+      // Vista previa de la imagen al elegir un archivo nuevo
+      inputFile.addEventListener("change", function (e) {
+        const archivo = e.target.files[0];
+        if (!archivo) return;
+        const lector = new FileReader();
+        lector.onload = (ev) => (previewImagen.src = ev.target.result);
+        lector.readAsDataURL(archivo);
+      });
+
+      // Guardar producto (crear o editar) sin recargar la página completa
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const id = document.getElementById("producto_id").value;
+        const url = id ? `/productos/editar/${id}` : "/productos/crear";
+        const formData = new FormData(form);
+
+        btnGuardar.disabled = true;
+        mostrarCargando(id ? "Actualizando producto..." : "Guardando producto...");
+        fetch(url, { method: "POST", body: formData })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              modalProducto.hide();
+              window.location.reload();
+            } else {
+              ocultarCargando();
+              alert(
+                "Error: " + (data.message || "No se pudo guardar el producto."),
+              );
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            ocultarCargando();
+            alert("Hubo un problema de red al guardar el producto. ❌");
+          })
+          .finally(() => {
+            btnGuardar.disabled = false;
+          });
+      });
+
+      // Eliminar producto
+      document.querySelectorAll(".btnEliminar").forEach((boton) => {
+        boton.addEventListener("click", function () {
+          const id = this.dataset.id;
+          const nombre = this.dataset.nombre;
+
+          if (
+            !confirm(
+              `¿Seguro que deseas eliminar "${nombre}"? Esta acción no se puede deshacer.`,
+            )
+          ) {
+            return;
+          }
+
+          mostrarCargando("Eliminando producto...");
+          fetch(`/productos/eliminar/${id}`, { method: "POST" })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.success) {
+                window.location.reload();
+              } else {
+                ocultarCargando();
+                alert(
+                  "Error: " +
+                    (data.message || "No se pudo eliminar el producto."),
+                );
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              ocultarCargando();
+              alert("Hubo un problema de red al eliminar el producto. ❌");
+            });
+        });
+      });
+
+      // ---------- Filtro de categorías + búsqueda combinados ----------
+      const botonesCategoria = document.querySelectorAll(".btn-categoria");
+      const filasTabla = document.querySelectorAll(
+        "#tablaProductos tr[data-fila-busqueda]",
+      );
+      let categoriaActiva = "todas";
+
+      function aplicarFiltros() {
+        const texto = document
+          .getElementById("buscarProducto")
+          .value.trim()
+          .toLowerCase();
+
+        filasTabla.forEach((fila) => {
+          const coincideTexto = fila.dataset.filaBusqueda.includes(texto);
+          const coincideCategoria =
+            categoriaActiva === "todas" ||
+            fila.dataset.categoria === categoriaActiva;
+          fila.style.display = coincideTexto && coincideCategoria ? "" : "none";
+        });
+      }
+
+      botonesCategoria.forEach((boton) => {
+        boton.addEventListener("click", function () {
+          botonesCategoria.forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          categoriaActiva = this.dataset.categoria;
+          aplicarFiltros();
+        });
+      });
+
+      // Búsqueda en vivo por nombre
+      document
+        .getElementById("buscarProducto")
+        .addEventListener("input", aplicarFiltros);
+
+      // ---------- Ordenamiento por columna (Producto, Categoría, Descripción, Precio, Stock) ----------
+      const tbodyProductos = document.getElementById("tablaProductos");
+      const encabezadosOrdenables = document.querySelectorAll(".th-sortable");
+      let columnaOrdenActual = null;
+      let ordenAscendente = true;
+
+      function obtenerValorCelda(fila, indiceColumna, tipo) {
+        const celda = fila.children[indiceColumna];
+        const texto = celda ? celda.textContent.trim() : "";
+        if (tipo === "numero") {
+          const numero = parseFloat(texto.replace(/[^0-9.\-]/g, ""));
+          return isNaN(numero) ? 0 : numero;
+        }
+        return texto.toLowerCase();
+      }
+
+      encabezadosOrdenables.forEach((encabezado) => {
+        encabezado.addEventListener("click", function () {
+          const indiceColumna = parseInt(this.dataset.col, 10);
+          const tipo = this.dataset.tipo;
+
+          if (columnaOrdenActual === indiceColumna) {
+            ordenAscendente = !ordenAscendente;
+          } else {
+            ordenAscendente = true;
+            columnaOrdenActual = indiceColumna;
+          }
+
+          // Reset visual de todos los encabezados, marcar solo el activo
+          encabezadosOrdenables.forEach((el) => {
+            el.classList.remove("sort-asc", "sort-desc");
+            el.querySelector(".sort-icon").className =
+              "fa-solid fa-sort sort-icon";
+          });
+          this.classList.add(ordenAscendente ? "sort-asc" : "sort-desc");
+          this.querySelector(".sort-icon").className = ordenAscendente
+            ? "fa-solid fa-sort-up sort-icon"
+            : "fa-solid fa-sort-down sort-icon";
+
+          const filasOrdenadas = Array.from(
+            tbodyProductos.querySelectorAll("tr[data-fila-busqueda]"),
+          );
+          filasOrdenadas.sort((filaA, filaB) => {
+            const valorA = obtenerValorCelda(filaA, indiceColumna, tipo);
+            const valorB = obtenerValorCelda(filaB, indiceColumna, tipo);
+            if (valorA < valorB) return ordenAscendente ? -1 : 1;
+            if (valorA > valorB) return ordenAscendente ? 1 : -1;
+            return 0;
+          });
+
+          filasOrdenadas.forEach((fila) => tbodyProductos.appendChild(fila));
+        });
+      });
+    </script>
+  </body>
+</html>

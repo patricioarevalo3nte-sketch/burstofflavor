@@ -1,0 +1,110 @@
+
+        /* Estilos Base del Bar */
+        body {
+            background-color: #12141c !important; /* Fondo ultra oscuro tipo Cyberpunk/Bar */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e3e4e6;
+        }
+
+        /* Navbar Custom */
+        .navbar-custom {
+            background-color: #1a1d29 !important;
+            border-bottom: 2px solid #ffc107;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Tarjetas Reales del Dashboard */
+        .card-custom {
+            background-color: #1a1d29 !important;
+            border: 1px solid #2d3248 !important;
+            border-radius: 16px !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tabla Estilizada */
+        .table-custom {
+            background-color: #1a1d29 !important;
+            color: #e3e4e6 !important;
+            border-collapse: separate;
+            border-spacing: 0 8px; /* Separación tipo tarjetas por fila */
+        }
+        
+        .table-custom thead th {
+            background-color: #24293d !important;
+            color: #ffc107 !important;
+            border: none !important;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            padding: 14px;
+        }
+
+        .table-custom tbody tr {
+            background-color: #1f2335 !important;
+            transition: all 0.2s ease-in-out;
+            cursor: default;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #292f4c !important;
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+        }
+
+        .table-custom tbody td {
+            padding: 16px !important;
+            border: none !important;
+            vertical-align: middle;
+        }
+
+        /* Bordes redondeados para las filas simuladas */
+        .table-custom tbody tr td:first-child {
+            border-top-left-radius: 12px !important;
+            border-bottom-left-radius: 12px !important;
+        }
+        .table-custom tbody tr td:last-child {
+            border-top-right-radius: 12px !important;
+            border-bottom-right-radius: 12px !important;
+        }
+
+        /* Modales Premium */
+        .modal-content-custom {
+            background-color: #1a1d29 !important;
+            border: 2px solid #ffc107 !important;
+            border-radius: 20px !important;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.2);
+        }
+
+        .form-control-custom {
+            background-color: #11131a !important;
+            border: 1px solid #2d3248 !important;
+            color: #fff !important;
+            border-radius: 10px !important;
+            padding: 10px 12px;
+            transition: all 0.2s;
+        }
+
+        .form-control-custom:focus {
+            background-color: #11131a !important;
+            border-color: #ffc107 !important;
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.4) !important;
+        }
+
+        /* Badges de Stock */
+        .badge-stock {
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            font-size: 0.9rem !important;
+            font-weight: bold !important;
+        }
+
+        /* Imágenes circulares con sombra glow */
+        .product-img-preview {
+            height: 50px;
+            width: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #ffc107;
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.3);
+        }
+   

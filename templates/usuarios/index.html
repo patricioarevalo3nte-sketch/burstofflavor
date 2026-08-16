@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarPOS - Gestión de Personal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --navy-900: #0b1b3d;
+        --navy-700: #0d2c6e;
+        --blue-500: #0d6efd;
+        --bg-app: #f4f7fe;
+        --border-soft: #e2e8f0;
+        --input-bg: #f8fafc;
+        --text-strong: #0b1b3d;
+        --text-muted: #4a5568;
+        --text-soft: #94a3b8;
+        --gold: #ffc107;
+      }
+
+      body {
+        background-color: var(--bg-app) !important;
+        font-family: "Segoe UI", sans-serif;
+        color: var(--text-strong);
+      }
+
+      /* Navbar */
+      .navbar-custom {
+        background: linear-gradient(135deg, var(--navy-900), var(--navy-700)) !important;
+        border-bottom: none;
+        box-shadow: 0 8px 20px rgba(13, 44, 110, 0.15);
+      }
+      .navbar-custom .navbar-brand {
+        color: #ffffff !important;
+      }
+      .navbar-custom .navbar-brand i {
+        color: var(--gold);
+      }
+
+      /* Botones Generales */
+      .btn-regresar {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+      }
+      .btn-regresar:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: var(--gold) !important;
+        border-color: var(--gold) !important;
+      }
+
+      .btn-nuevo-usuario {
+        background: var(--gold) !important;
+        color: var(--navy-900) !important;
+        border: none !important;
+        border-radius: 10px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+      }
+      .btn-nuevo-usuario:hover {
+        background: #ffcd39 !important;
+        color: var(--navy-900) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(255, 193, 7, 0.3);
+      }
+
+      /* Contenedor y Tarjetas */
+      .card-custom {
+        background-color: #ffffff !important;
+        border: 1px solid var(--border-soft) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 15px 35px rgba(13, 110, 253, 0.08);
+      }
+
+      .titulo-seccion {
+        color: var(--navy-900) !important;
+      }
+      .subtitulo-seccion {
+        color: var(--text-muted) !important;
+      }
+
+      /* Tabla */
+      .table-custom {
+        background-color: transparent !important;
+        color: var(--text-strong) !important;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+      }
+      .table-custom thead th {
+        background-color: var(--navy-900) !important;
+        color: var(--gold) !important;
+        border: none !important;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        padding: 14px;
+      }
+      .table-custom tbody tr {
+        background-color: #ffffff !important;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 2px 8px rgba(13, 27, 61, 0.06);
+      }
+      .table-custom tbody tr:hover {
+        background-color: var(--input-bg) !important;
+        transform: scale(1.005);
+      }
+      .table-custom tbody td {
+        padding: 16px !important;
+        border: none !important;
+        vertical-align: middle;
+        color: var(--text-strong) !important;
+      }
+      .table-custom tbody tr td:first-child {
+        border-top-left-radius: 12px !important;
+        border-bottom-left-radius: 12px !important;
+      }
+      .table-custom tbody tr td:last-child {
+        border-top-right-radius: 12px !important;
+        border-bottom-right-radius: 12px !important;
+      }
+
+      /* Componentes de Tabla */
+      .badge-rol-admin {
+        background-color: var(--navy-900) !important;
+        color: var(--gold) !important;
+        border: 1px solid var(--gold);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+      .badge-rol-vendedor {
+        background-color: #e0f2fe !important;
+        color: var(--navy-700) !important;
+        border: 1px solid #bae6fd;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+      .user-code {
+        background: var(--input-bg);
+        border: 1px solid var(--border-soft);
+        color: var(--blue-500);
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+
+      /* Modales */
+      .modal-content-custom {
+        background-color: #ffffff !important;
+        border: 2px solid var(--blue-500) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 30px rgba(13, 27, 61, 0.2) !important;
+        color: var(--text-strong) !important;
+      }
+      .modal-content-custom label {
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .form-control-custom, .form-select-custom {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--border-soft) !important;
+        color: var(--text-strong) !important;
+        border-radius: 10px !important;
+        padding: 10px 12px;
+        width: 100%;
+      }
+      .form-control-custom:focus, .form-select-custom:focus {
+        background-color: #ffffff !important;
+        border-color: var(--blue-500) !important;
+        color: var(--text-strong);
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12) !important;
+      }
+
+      .btn-guardar-usuario {
+        background: var(--navy-900) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 10px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+      }
+      .btn-guardar-usuario:hover {
+        background: var(--blue-500) !important;
+        color: #ffffff !important;
+        box-shadow: 0 8px 18px rgba(13, 110, 253, 0.25);
+      }
+    </style>
+</head>
+<body>
+
+    <!-- Bar de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-custom py-3 mb-4">
+        <div class="container">
+            <span class="navbar-brand fw-bold fs-4">
+                <i class="fa-solid fa-beer-mug-empty me-2"></i>BarPOS
+            </span>
+            <div class="ms-auto d-flex gap-2">
+                <a href="/dashboard" class="btn btn-regresar px-3 fw-semibold">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Menú Principal
+                </a>
+                <button class="btn btn-nuevo-usuario px-3" data-bs-toggle="modal" data-bs-target="#modalCrear">
+                    <i class="fa-solid fa-user-plus me-1"></i> Nuevo Usuario
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container pb-5">
+        <!-- Encabezado de Sección -->
+        <div class="mb-4">
+            <h2 class="fw-bold titulo-seccion mb-1">
+                <i class="fa-solid fa-users-gear text-warning me-2"></i>Gestión de Personal
+            </h2>
+            <p class="subtitulo-seccion mb-0">Administra el acceso, roles y permisos de los empleados del bar</p>
+        </div>
+
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show text-center shadow-sm rounded-3 mb-4" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Tabla -->
+        <div class="card card-custom p-3">
+            <div class="table-responsive">
+                <table class="table table-custom align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-3">ID</th>
+                            <th>Nombre Real</th>
+                            <th>Usuario (Login)</th>
+                            <th>Rol Asignado</th>
+                            <th class="text-center pe-3">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in usuarios %}
+                        <tr>
+                            <td class="ps-3 fw-bold text-muted">#{{ u.id }}</td>
+                            <td class="fw-bold">{{ u.nombre }}</td>
+                            <td><code class="user-code">@{{ u.usuario }}</code></td>
+                            <td>
+                                {% if u.rol_nombre == 'Administrador' or u.id_rol == 1 %}
+                                    <span class="badge badge-rol-admin">
+                                        <i class="fa-solid fa-shield-halved me-1"></i>Administrador
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-rol-vendedor">
+                                        <i class="fa-solid fa-user me-1"></i>Vendedor
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center pe-3">
+                                <button class="btn btn-sm btn-outline-primary me-1 rounded-2" data-bs-toggle="modal" data-bs-target="#modalEditar{{ u.id }}" title="Editar usuario">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <a href="{{ url_for('usuarios.eliminar', id=u.id) }}" class="btn btn-sm btn-outline-danger rounded-2" onclick="return confirm('¿Seguro que deseas desactivar este usuario?')" title="Desactivar usuario">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                No se encontraron usuarios registrados.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales para Editar (Fuera de la tabla) -->
+    {% for u in usuarios %}
+    <div class="modal fade" id="modalEditar{{ u.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">
+                        <i class="fa-solid fa-user-pen text-primary me-2"></i>Editar Personal
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('usuarios.editar', id=u.id) }}" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control form-control-custom" name="nombre" value="{{ u.nombre }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de Usuario</label>
+                            <input type="text" class="form-control form-control-custom" name="usuario" value="{{ u.usuario }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Rol del Sistema</label>
+                            <select class="form-select form-select-custom" name="id_rol">
+                                <option value="1" {% if u.id_rol == 1 or u.rol_nombre == 'Administrador' %}selected{% endif %}>Administrador</option>
+                                <option value="2" {% if u.id_rol == 2 or u.rol_nombre == 'Vendedor' %}selected{% endif %}>Vendedor (Mesero/Cajero)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nueva Clave <small class="text-warning fw-normal">(Opcional)</small></label>
+                            <input type="password" class="form-control form-control-custom" name="clave" placeholder="Dejar en blanco para conservar la actual">
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-2 text-muted fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-guardar-usuario px-4">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Modal para Crear Usuario -->
+    <div class="modal fade" id="modalCrear" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">
+                        <i class="fa-solid fa-user-plus text-primary me-2"></i>Agregar Personal al Bar
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('usuarios.crear') }}" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control form-control-custom" name="nombre" placeholder="Ej: Juan Pérez" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de Usuario (Login)</label>
+                            <input type="text" class="form-control form-control-custom" name="usuario" placeholder="Ej: juan.bar" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña de Acceso</label>
+                            <input type="password" class="form-control form-control-custom" name="clave" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Rol Asignado</label>
+                            <select class="form-select form-select-custom" name="id_rol">
+                                <option value="2" selected>Vendedor (Mesero/Cajero)</option>
+                                <option value="1">Administrador</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-2 text-muted fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-guardar-usuario px-4">Registrar Usuario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

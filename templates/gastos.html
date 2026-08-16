@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Gastos</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+
+    <style>
+      * {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #f4f7fe;
+        color: #334155;
+        min-height: 100vh;
+      }
+
+      /* Navbar / Header Superior */
+      .app-header {
+        background: linear-gradient(135deg, #0b1b3d, #0d2c6e);
+        color: white;
+        padding: 16px 0;
+        box-shadow: 0 4px 20px rgba(11, 27, 61, 0.15);
+      }
+
+      .btn-back {
+        background: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+      }
+
+      .btn-back:hover {
+        background: rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        transform: translateX(-2px);
+      }
+
+      /* Botón de Acción Principal */
+      .btn-custom-action {
+        background: #0d2c6e;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+
+      .btn-custom-action:hover {
+        background: #0d6efd;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+      }
+
+      /* Tarjeta contenedora principal */
+      .main-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid rgba(13, 110, 253, 0.08);
+        box-shadow: 0 8px 24px rgba(11, 27, 61, 0.04);
+        padding: 24px;
+      }
+
+      /* Form Controles */
+      .form-control,
+      .form-select {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+        border-radius: 10px;
+        font-size: 15px;
+        color: #334155;
+        padding: 10px 14px;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        background: white;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 14px;
+      }
+
+      /* Modales Adaptables */
+      .modal-content {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 15px 35px rgba(11, 27, 61, 0.2);
+        overflow: hidden;
+      }
+
+      .modal-header {
+        background: linear-gradient(135deg, #0b1b3d, #0d2c6e);
+        color: white;
+        border-bottom: none;
+        padding: 18px 24px;
+      }
+
+      .modal-header .btn-close {
+        filter: invert(1);
+      }
+
+      .modal-footer {
+        border-top: 1px solid #f1f5f9;
+        padding: 16px 24px;
+      }
+
+      /* Estilo Tabla Desktop */
+      .table-custom {
+        margin-bottom: 0;
+      }
+
+      .table-custom thead {
+        background-color: #0b1b3d;
+        color: white;
+      }
+
+      .table-custom th {
+        font-weight: 600;
+        border-bottom: 2px solid #e2e8f0;
+        padding: 14px 16px;
+        user-select: none;
+      }
+
+      /* Encabezados ordenables */
+      .th-sortable {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .th-sortable:hover {
+        background-color: #0d2c6e;
+      }
+
+      .table-custom td {
+        padding: 14px 16px;
+        vertical-align: middle;
+      }
+
+      /* Filas intercaladas: Blanco y Gris claro */
+      .table-custom tbody tr:nth-of-type(odd) {
+        background-color: #ffffff;
+      }
+
+      .table-custom tbody tr:nth-of-type(even) {
+        background-color: #f1f5f9; /* Gris suave */
+      }
+
+      .table-custom tbody tr:hover {
+        background-color: #e2e8f0 !important; /* Resaltado al pasar el ratón */
+      }
+
+      /* Tarjetas de Gastos para Vista Móvil */
+      .gasto-mobile-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      }
+
+      /* Intercalado de color para las tarjetas móviles */
+      .mobile-cards-view .gasto-mobile-card:nth-of-type(odd) {
+        background-color: #ffffff;
+      }
+
+      .mobile-cards-view .gasto-mobile-card:nth-of-type(even) {
+        background-color: #f1f5f9;
+      }
+
+      /* Ocultar/Mostrar según pantalla */
+      @media (max-width: 767.98px) {
+        .desktop-table-view {
+          display: none !important;
+        }
+        .mobile-cards-view {
+          display: block !important;
+        }
+        .main-card {
+          padding: 16px;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .desktop-table-view {
+          display: block !important;
+        }
+        .mobile-cards-view {
+          display: none !important;
+        }
+      }
+      /* 1. Cabecera con su propio color y efecto hover en ordenables */
+#tablaGastos thead th {
+  background-color: #1e293b; /* Color de fondo oscuro para la cabecera */
+  color: #ffffff;            /* Texto blanco */
+  border-bottom: 2px solid #0f172a;
+}
+
+#tablaGastos thead th.th-sortable {
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#tablaGastos thead th.th-sortable:hover {
+  background-color: #334155; /* Cambia al pasar el mouse sobre la cabecera */
+  color: #38bdf8;            /* Resalta texto e ícono */
+}
+
+/* 2. Filas Impares (1, 3, 5...): Fondo blanco con texto oscuro legible */
+#tablaGastos tbody tr:nth-child(odd) td {
+  background-color: #ffffff !important;
+  color: #212529 !important; /* Texto oscuro */
+}
+
+/* 3. Filas Pares (2, 4, 6...): Fondo gris claro con texto oscuro legible */
+#tablaGastos tbody tr:nth-child(even) td {
+  background-color: #f1f7f9 !important; /* Gris suave */
+  color: #212529 !important; /* Texto oscuro */
+}
+    </style>
+  </head>
+
+  <body>
+    <!-- ENCABEZADO SUPERIOR -->
+    <header class="app-header mb-4">
+      <div class="container d-flex justify-content-between align-items-center">
+        <!-- Botón Regresar -->
+        <a href="javascript:history.back()" class="btn-back">
+          <i class="bi bi-arrow-left"></i>
+          <span class="d-none d-sm-inline">Regresar</span>
+        </a>
+
+        <h4 class="m-0 fw-bold fs-5 text-white">
+          <i class="bi bi-cash-stack me-1"></i> Control de Gastos
+        </h4>
+
+        <div class="text-end d-none d-md-block">
+          <small class="text-white-50 d-block">Usuario actual</small>
+          <span class="fw-semibold text-white">{{ usuario }}</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mb-5">
+      <!-- CABECERA DE ACCIONES -->
+      <div
+        class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4"
+      >
+        <div>
+          <h3 class="fw-bold mb-1" style="color: #0b1b3d;">Listado de Gastos</h3>
+          <p class="text-muted small m-0">
+            Haz clic en los encabezados de la tabla para ordenar los registros.
+          </p>
+        </div>
+
+        <button
+          class="btn btn-custom-action d-flex align-items-center justify-content-center gap-2"
+          data-bs-toggle="modal"
+          data-bs-target="#modalNuevo"
+        >
+          <i class="bi bi-plus-circle-fill"></i>
+          <span>Nuevo Gasto</span>
+        </button>
+      </div>
+
+      <!-- FILTRO RÁPIDO PARA VISTA MÓVIL -->
+      <div class="mobile-cards-view mb-3">
+        <label class="form-label mb-1">Ordenar por:</label>
+        <select class="form-select" id="selectOrdenMovil" onchange="ordenarMovil(this.value)">
+          <option value="id_gasto">ID</option>
+          <option value="nombre">Nombre</option>
+          <option value="descripcion">Descripción</option>
+          <option value="valor">Valor</option>
+          <option value="fecha_gasto">Fecha Gasto</option>
+          <option value="usuario_registro">Registrado Por</option>
+          <option value="fecha_registro">Fecha Registro</option>
+        </select>
+      </div>
+
+      <!-- CONTENEDOR PRINCIPAL -->
+      <div class="main-card">
+        <!-- VISTA TABLA (Pantallas Medianas y Grandes) -->
+        <div class="table-responsive desktop-table-view">
+          <table class="table table-custom align-middle" id="tablaGastos">
+            <thead>
+              <tr>
+                <th class="th-sortable" onclick="ordenarTabla(0, 'number')">
+                  ID <i class="bi bi-arrow-down-up small opacity-50 ms-1"></i>
+                </th>
+                <th class="th-sortable" onclick="ordenarTabla(1, 'string')">
+                  Nombre <i class="bi bi-arrow-down-up small opacity-40 ms-1"></i>
+                </th>
+                <th class="th-sortable" onclick="ordenarTabla(2, 'string')">
+                  Descripción <i class="bi bi-arrow-down-up small opacity-50 ms-1"></i>
+                </th>
+                <th class="th-sortable" onclick="ordenarTabla(3, 'currency')">
+                  Valor <i class="bi bi-arrow-down-up small opacity-50 ms-1"></i>
+                </th>
+                <th class="th-sortable text-center" onclick="ordenarTabla(4, 'date')">
+                  Fecha Gasto <i class="bi bi-arrow-down-up small opacity-50 ms-1"></i>
+                </th>
+                <th class="th-sortable" onclick="ordenarTabla(5, 'string')">
+                  Registrado por <i class="bi bi-arrow-down-up small opacity-50 ms-1"></i>
+                </th>
+                <th class="th-sortable" onclick="ordenarTabla(6, 'date')">
+                  Fecha Registro <i class="bi bi-arrow-down-up small opacity-50 ms-1"></i>
+                </th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for g in gastos %}
+              <tr>
+                <td class="fw-semibold text-muted" data-val="{{ g.id_gasto }}">
+                  #{{ g.id_gasto }}
+                </td>
+                <td class="fw-semibold" style="color: #0b1b3d;" data-val="{{ g.nombre }}">
+                  {{ g.nombre }}
+                </td>
+                <td data-val="{{ g.descripcion or '' }}">{{ g.descripcion or '-' }}</td>
+                <td class="fw-bold text-success fs-6" data-val="{{ g.valor }}">
+                  ${{ "{:,.2f}".format(g.valor) }}
+                </td>
+                <td class="text-center" data-val="{{ g.fecha_gasto }}">
+                  {{ g.fecha_gasto }}
+                </td>
+                <td data-val="{{ g.usuario_registro }}">
+                  <span class="badge bg-light text-dark border">
+                    <i class="bi bi-person-fill text-secondary"></i>
+                    {{ g.usuario_registro }}
+                  </span>
+                </td>
+                <td class="small text-muted" data-val="{{ g.fecha_registro.strftime('%Y-%m-%d %H:%M:%S') }}">
+                  {{ g.fecha_registro.strftime('%d/%m/%Y %H:%M') }}
+                </td>
+                <td class="text-end">
+                  {% if rol == 'Administrador' or g.user_id == usuario_actual_id %}
+                  <div class="btn-group btn-group-sm">
+                    <button
+                      class="btn btn-outline-warning"
+                      onclick="editarGasto(
+                          '{{g.id_gasto}}',
+                          '{{g.nombre}}',
+                          '{{g.descripcion}}',
+                          '{{g.valor}}',
+                          '{{g.fecha_gasto}}'
+                      )"
+                      title="Editar"
+                    >
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <a
+                      href="{{ url_for('gastos.eliminar_gasto', id_gasto=g.id_gasto) }}"
+                      class="btn btn-outline-danger"
+                      onclick="return confirm('¿Desea eliminar este registro?');"
+                      title="Eliminar"
+                    >
+                      <i class="bi bi-trash-fill"></i>
+                    </a>
+                  </div>
+                  {% else %}
+                  <span class="badge bg-light text-muted border">Lectura</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="8" class="text-center py-4 text-muted">
+                  No se encontraron registros de gastos.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- VISTA TARJETAS (Pantallas Pequeñas / Teléfonos) -->
+        <div class="mobile-cards-view" id="contenedorTarjetasMovil">
+          {% for g in gastos %}
+          <div
+            class="gasto-mobile-card"
+            data-id_gasto="{{ g.id_gasto }}"
+            data-nombre="{{ g.nombre|lower }}"
+            data-descripcion="{{ (g.descripcion or '')|lower }}"
+            data-valor="{{ g.valor }}"
+            data-fecha_gasto="{{ g.fecha_gasto }}"
+            data-usuario_registro="{{ g.usuario_registro|lower }}"
+            data-fecha_registro="{{ g.fecha_registro.strftime('%Y-%m-%d %H:%M:%S') }}"
+          >
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <span class="badge bg-light text-secondary border mb-1">
+                  #{{ g.id_gasto }}
+                </span>
+                <h6 class="fw-bold m-0" style="color: #0b1b3d;">{{ g.nombre }}</h6>
+              </div>
+              <span class="fw-bold text-success fs-5">
+                ${{ "{:,.2f}".format(g.valor) }}
+              </span>
+            </div>
+
+            {% if g.descripcion %}
+            <p class="small text-muted mb-2">{{ g.descripcion }}</p>
+            {% endif %}
+
+            <div class="row g-2 small text-muted border-top pt-2 mt-2">
+              <div class="col-6">
+                <i class="bi bi-calendar3 me-1"></i> {{ g.fecha_gasto }}
+              </div>
+              <div class="col-6 text-end">
+                <i class="bi bi-person me-1"></i> {{ g.usuario_registro }}
+              </div>
+            </div>
+
+            <div
+              class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top"
+            >
+              <span class="small text-muted">
+                {{ g.fecha_registro.strftime('%d/%m/%Y %H:%M') }}
+              </span>
+
+              <div>
+                {% if rol == 'Administrador' or g.user_id == usuario_actual_id %}
+                <button
+                  class="btn btn-sm btn-outline-warning me-1"
+                  onclick="editarGasto(
+                      '{{g.id_gasto}}',
+                      '{{g.nombre}}',
+                      '{{g.descripcion}}',
+                      '{{g.valor}}',
+                      '{{g.fecha_gasto}}'
+                  )"
+                >
+                  <i class="bi bi-pencil-fill"></i> Editar
+                </button>
+
+                <a
+                  href="{{ url_for('gastos.eliminar_gasto', id_gasto=g.id_gasto) }}"
+                  class="btn btn-sm btn-outline-danger"
+                  onclick="return confirm('¿Desea eliminar este registro?');"
+                >
+                  <i class="bi bi-trash-fill"></i> Eliminar
+                </a>
+                {% else %}
+                <span class="badge bg-light text-muted border">Lectura</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="text-center py-4 text-muted">
+            No se encontraron registros de gastos.
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL NUEVO GASTO -->
+    <div class="modal fade" id="modalNuevo" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form method="POST" action="{{ url_for('gastos.guardar_gasto') }}">
+            <div class="modal-header">
+              <h5 class="modal-title fw-bold">
+                <i class="bi bi-plus-circle me-1"></i> Nuevo Gasto
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div class="modal-body p-4">
+              <div class="mb-3">
+                <label class="form-label">Nombre del Gasto</label>
+                <input
+                  type="text"
+                  name="nombre"
+                  class="form-control"
+                  placeholder="Ej. Compra de suministros"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea
+                  name="descripcion"
+                  class="form-control"
+                  rows="2"
+                  placeholder="Detalles opcionales"
+                ></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Valor ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    name="valor"
+                    class="form-control"
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Fecha del Gasto</label>
+                  <input
+                    type="date"
+                    name="fecha_gasto"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer bg-light">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-custom-action">
+                Guardar Gasto
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL EDITAR GASTO -->
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form method="POST" action="{{ url_for('gastos.editar_gasto') }}">
+            <input type="hidden" name="id_gasto" id="id_gasto" />
+
+            <div class="modal-header">
+              <h5 class="modal-title fw-bold">
+                <i class="bi bi-pencil-square me-1"></i> Editar Gasto
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div class="modal-body p-4">
+              <div class="mb-3">
+                <label class="form-label">Nombre del Gasto</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  class="form-control"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  class="form-control"
+                  rows="2"
+                ></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Valor ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    id="valor"
+                    name="valor"
+                    class="form-control"
+                    required
+                  />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Fecha del Gasto</label>
+                  <input
+                    type="date"
+                    id="fecha_gasto"
+                    name="fecha_gasto"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer bg-light">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-custom-action">
+                Actualizar Gasto
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const inputFecha = document.querySelector('input[name="fecha_gasto"]');
+        if (inputFecha) {
+          const hoy = new Date().toISOString().split("T")[0];
+          inputFecha.value = hoy;
+        }
+      });
+
+      function editarGasto(id, nombre, descripcion, valor, fecha) {
+        document.getElementById("id_gasto").value = id;
+        document.getElementById("nombre").value = nombre;
+        document.getElementById("descripcion").value = descripcion;
+        document.getElementById("valor").value = valor;
+        document.getElementById("fecha_gasto").value = fecha;
+
+        new bootstrap.Modal(document.getElementById("modalEditar")).show();
+      }
+
+      // --- SCRIPT DE ORDENAMIENTO EN TABLA (DESKTOP) ---
+      let ordenActual = { columna: -1, direccion: 'asc' };
+
+      function ordenarTabla(numColumna, tipo) {
+        const tabla = document.getElementById("tablaGastos");
+        const tbody = tabla.querySelector("tbody");
+        const filas = Array.from(tbody.querySelectorAll("tr"));
+
+        if (filas.length === 0 || filas[0].cells.length <= 1) return;
+
+        // Alternar dirección de ordenamiento
+        if (ordenActual.columna === numColumna) {
+          ordenActual.direccion = ordenActual.direccion === 'asc' ? 'desc' : 'asc';
+        } else {
+          ordenActual.columna = numColumna;
+          ordenActual.direccion = 'asc';
+        }
+
+        filas.sort((a, b) => {
+          let valA = a.cells[numColumna].getAttribute("data-val") || a.cells[numColumna].innerText.trim();
+          let valB = b.cells[numColumna].getAttribute("data-val") || b.cells[numColumna].innerText.trim();
+
+          if (tipo === 'number' || tipo === 'currency') {
+            valA = parseFloat(valA) || 0;
+            valB = parseFloat(valB) || 0;
+          } else if (tipo === 'string') {
+            valA = valA.toLowerCase();
+            valB = valB.toLowerCase();
+          }
+
+          if (valA < valB) return ordenActual.direccion === 'asc' ? -1 : 1;
+          if (valA > valB) return ordenActual.direccion === 'asc' ? 1 : -1;
+          return 0;
+        });
+
+        // Re-insertar filas ordenadas
+        filas.forEach(fila => tbody.appendChild(fila));
+
+        // Actualizar iconos de dirección
+        const encabezados = tabla.querySelectorAll("th.th-sortable");
+        encabezados.forEach((th, idx) => {
+          const icono = th.querySelector("i");
+          if (idx === numColumna) {
+            icono.className = ordenActual.direccion === 'asc' ? 'bi bi-sort-up ms-1 text-warning' : 'bi bi-sort-down ms-1 text-warning';
+          } else {
+            icono.className = 'bi bi-arrow-down-up small opacity-50 ms-1';
+          }
+        });
+      }
+
+      // --- SCRIPT DE ORDENAMIENTO PARA VISTA MÓVIL ---
+      function ordenarMovil(criterio) {
+        const contenedor = document.getElementById("contenedorTarjetasMovil");
+        const tarjetas = Array.from(contenedor.querySelectorAll(".gasto-mobile-card"));
+
+        tarjetas.sort((a, b) => {
+          let valA = a.getAttribute(`data-${criterio}`);
+          let valB = b.getAttribute(`data-${criterio}`);
+
+          if (criterio === 'id_gasto' || criterio === 'valor') {
+            valA = parseFloat(valA) || 0;
+            valB = parseFloat(valB) || 0;
+          }
+
+          if (valA < valB) return -1;
+          if (valA > valB) return 1;
+          return 0;
+        });
+
+        tarjetas.forEach(tarjeta => contenedor.appendChild(tarjeta));
+      }
+    </script>
+  </body>
+</html>
